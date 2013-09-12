@@ -1,7 +1,9 @@
 <?php
 namespace BigML\Client;
 use InvalidArgumentException;
+use RuntimeException;
 use ZendRest\Client\RestClient;
+use Zend\Json\Json;
 
 class BigMl
 {
@@ -45,11 +47,47 @@ class BigMl
         if ($this->client) {
             return $this->client;
         }
-        return $this->client = new RestClient();
+        $uri = self::ACCESS_POINT;
+        if ($this->getOption('mode')) {
+            $uri .= $this->getOption('mode') . '/';
+        }
+        $uri .= $this->getOption('version') . '/';
+        return $this->setClient(new RestClient($uri));
     }
 
     public function setClient(RestClient $client)
     {
-        $this->client = $client;
+        return $this->client = $client;
+    }
+
+    public function restGet($path, array $query = array())
+    {
+        $path = '?username=' . $this->getOption('username') . ';api_key=' . $this->getOption('api_key');
+        $response = $this->getClient()->restGet($path, $query);
+        if (!$response->isOk()) {
+            throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response));
+        }
+        return Json::decode($response->getBody());
+    }
+
+    public function restPost($path, array $query = null)
+    {
+
+    }
+
+    public function restPut($path, array $query = null)
+    {
+
+    }
+
+    public function restDelete($path)
+    {
+        $client = $this->getClient();
+        return $client->restDelete();
+    }
+
+    protected function prepareQuery()
+    {
+
     }
 }

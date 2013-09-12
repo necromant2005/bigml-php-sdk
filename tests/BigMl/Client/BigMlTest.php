@@ -37,6 +37,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
         $this->assertInstanceof('ZendRest\Client\RestClient', $client->getClient());
+        $this->assertEquals('https://bigml.io/dev/andromeda/', $client->getClient()->getUri()->toString());
     }
 
     public function testConstructSetClient()
@@ -76,4 +77,15 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         $client->setOption('username', 'testing');
         $this->assertEquals('testing', $client->getOption('username'));
     }
+
+    public function testRestGet()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $x = $client->restGet('source');
+        var_dump($x);
+    }
+
 }

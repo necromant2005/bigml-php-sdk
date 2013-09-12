@@ -1,0 +1,25 @@
+{
+    "name": "necromant2005/bigml-php-sdk",
+    "type": "library",
+    "description": "BigML php SDK",
+    "keywords": ["bigml", "sdk"],
+    "homepage": "https://github.com/necromant2005/tt.git",
+    "authors": [
+        {
+            "name": "Rostislav Mykhajliw",
+            "email": "necromant2005@gmail.com",
+            "homepage": "https://github.com/necromant2005",
+            "role": "Developer"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.zendframework.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "zendframework/zendrest": "dev-master"
+    }
+}

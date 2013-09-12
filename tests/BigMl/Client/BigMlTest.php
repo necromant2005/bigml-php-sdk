@@ -12,13 +12,10 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'version' => 'andromeda',
             'mode' => 'dev',
         ));
-        $this->assertInstanceOf('BigMl\Client\BigMl', $client);
-        $this->assertEquals(array(
-            'username' => 'alfred',
-            'api_key' => '79138a622755a2383660347f895444b1eb927730',
-            'version' => 'andromeda',
-            'mode' => 'dev',
-        ), $client->getOptions());
+        $this->assertEquals('alfred', $client->getOption('username'));
+        $this->assertEquals('79138a622755a2383660347f895444b1eb927730', $client->getOption('api_key'));
+        $this->assertEquals('andromeda', $client->getOption('version'));
+        $this->assertEquals('dev', $client->getOption('mode'));
     }
 
     public function testConstructDefault()
@@ -27,13 +24,38 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $this->assertInstanceOf('BigMl\Client\BigMl', $client);
-        $this->assertEquals(array(
+        $this->assertEquals('alfred', $client->getOption('username'));
+        $this->assertEquals('79138a622755a2383660347f895444b1eb927730', $client->getOption('api_key'));
+        $this->assertEquals('andromeda', $client->getOption('version'));
+        $this->assertEquals('dev', $client->getOption('mode'));
+    }
+
+    public function testConstructGetClient()
+    {
+        $client = new BigMl(array(
             'username' => 'alfred',
-            'api_key' => '79138a622755a2383660347f895444b1eb927730',
-            'version' => 'andromeda',
-            'mode' => 'dev',
-        ), $client->getOptions());
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $this->assertInstanceof('ZendRest\Client\RestClient', $client->getClient());
+    }
+
+    public function testConstructSetClient()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $mock = $this->getMock('ZendRest\Client\RestClient');
+        $client->setClient($mock);
+        $this->assertEquals($mock, $client->getClient());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testConstructWithoutParameters()
+    {
+        $client = new BigMl(array());
     }
 
     public function testGetOption()
@@ -52,6 +74,6 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
         $client->setOption('username', 'testing');
-        $this->assertEquals('testting', $client->getOption('username'));
+        $this->assertEquals('testing', $client->getOption('username'));
     }
 }

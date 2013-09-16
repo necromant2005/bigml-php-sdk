@@ -95,4 +95,10 @@ class BigMl
         }
         return Json::decode($response->getBody(), Json::TYPE_ARRAY);
     }
+
+    public static function factory($name, $options)
+    {
+        $className = 'BigMl\\Resource\\' . ucfirst($name);
+        return new $className(new self($options));
+    }
 }

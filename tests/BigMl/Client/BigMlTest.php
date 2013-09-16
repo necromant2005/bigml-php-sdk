@@ -193,4 +193,16 @@ class BigMlTest extends PHPUnit_Framework_TestCase
              ->will($this->returnValue($response));
         return $client;
     }
+
+
+    public function testFactory()
+    {
+        $source = BigMl::factory('source', array(
+            'username' => 'alfred',
+            'api_key'  => '79138a622755a2383660347f895444b1eb927730'            
+        ));
+        $this->assertInstanceof('BigMl\Resource\AbstractResource', $source);
+        $this->assertInstanceof('BigMl\Resource\Source', $source);
+        $this->assertInstanceof('BigMl\Client\BigMl', $source->getClient());
+    }
 }

@@ -70,3 +70,25 @@ $source = BigMl::factory('source', array(
     'version' => 'andromeda',
 ));
 ```
+
+#### Usage Source
+Create source data
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->create(array('data' => array(
+    'a', 'b', 'c',
+    1, 2, 3,
+    4, 5, 7
+)));
+```
+
+Create source remote
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->create(array('remote' => 's3://bigml-public/csv/iris.csv'));
+```
+

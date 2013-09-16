@@ -12,12 +12,14 @@ class BigMl
 
     const FIELD_USERNAME = 'username';
     const FIELD_API_KEY  = 'api_key';
+    const FIELD_VERSION  = 'version';
+    const FIELD_MODE     = 'mode';
 
     protected $client = null;
 
     protected $options = array(
-        'version' => 'andromeda',
-        'mode'     => 'dev',
+        self::FIELD_VERSION => 'andromeda',
+        self::FIELD_MODE    => 'dev',
     );
 
     public function __construct(array $options)
@@ -49,10 +51,10 @@ class BigMl
             return $this->client;
         }
         $uri = self::ACCESS_POINT;
-        if ($this->getOption('mode')) {
-            $uri .= $this->getOption('mode') . '/';
+        if ($this->getOption(self::FIELD_MODE)) {
+            $uri .= $this->getOption(self::FIELD_MODE) . '/';
         }
-        $uri .= $this->getOption('version') . '/';
+        $uri .= $this->getOption(self::FIELD_VERSION) . '/';
         return $this->setClient(new RestClient($uri));
     }
 

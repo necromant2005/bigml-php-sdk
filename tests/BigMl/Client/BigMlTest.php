@@ -135,6 +135,27 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testProcessResponse()
+    {
+        $response = $this->getMock('Zend\Http\Response');
+        $response->expects($this->once())
+             ->method('getBody')
+             ->will($this->returnValue(json_encode(array('abc' => 123))));
+        $response->expects($this->once())
+             ->method('isOk')
+             ->will($this->returnValue(true));
+
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $method = new ReflectionMethod(
+          get_class($client), 'processResponse'
+        );
+        $method->setAccessible(TRUE);
+        $this->assertEquals(array('abc' => 123), $method->invoke($client, $response));
+    }
+
     /**
      * @expectedException RuntimeException
      */

@@ -1,5 +1,5 @@
 <?php
-namespace BigML\Client;
+namespace BigMl\Client;
 use InvalidArgumentException;
 use RuntimeException;
 use ZendRest\Client\RestClient;

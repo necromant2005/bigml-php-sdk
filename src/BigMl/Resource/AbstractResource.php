@@ -1,6 +1,6 @@
 <?php
 namespace BigMl\Resource;
-use BigML\Client\BigML as Client;
+use BigMl\Client\BigML as Client;
 
 abstract class AbstractResource
 {

@@ -1,6 +1,7 @@
 <?php
 namespace BigMl\Client;
 use PHPUnit_Framework_TestCase;
+use ReflectionMethod;
 
 class BigMlTest extends PHPUnit_Framework_TestCase
 {
@@ -116,6 +117,43 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         ));
         $client->setClient($this->getClientMock('restDelete'));
         $this->assertEquals(array('status' => 'ok'), $client->restDelete('source'));
+    }
+
+    public function testPreparePath()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+
+        $method = new ReflectionMethod(
+          get_class($client), 'preparePath'
+        );
+        $method->setAccessible(TRUE);
+        $this->assertEquals(
+            'abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'abc')
+        );
+    }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testProcessResponseError()
+    {
+        $response = $this->getMock('Zend\Http\Response');
+        $response->expects($this->once())
+             ->method('isOk')
+             ->will($this->returnValue(false));
+
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $method = new ReflectionMethod(
+          get_class($client), 'processResponse'
+        );
+        $method->setAccessible(TRUE);
+        $method->invoke($client, $response);
     }
 
     private function getClientMock($method)

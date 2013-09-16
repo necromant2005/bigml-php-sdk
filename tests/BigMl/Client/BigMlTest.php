@@ -84,8 +84,54 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $x = $client->restGet('source');
-        var_dump($x);
+        $client->setClient($this->getClientMock('restGet'));
+        $this->assertEquals(array('status' => 'ok'), $client->restGet('source'));
     }
 
+    public function testRestPut()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $client->setClient($this->getClientMock('restPut'));
+        $this->assertEquals(array('status' => 'ok'), $client->restPut('source'));
+    }
+
+    public function testRestPost()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $client->setClient($this->getClientMock('restPost'));
+        $this->assertEquals(array('status' => 'ok'), $client->restPost('source'));
+    }
+
+    public function testRestDelete()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $client->setClient($this->getClientMock('restDelete'));
+        $this->assertEquals(array('status' => 'ok'), $client->restDelete('source'));
+    }
+
+    private function getClientMock($method)
+    {
+        $response = $this->getMock('Zend\Http\Response');
+        $response->expects($this->once())
+             ->method('getBody')
+             ->will($this->returnValue(json_encode(array('status' => 'ok'))));
+        $response->expects($this->once())
+             ->method('isOk')
+             ->will($this->returnValue(true));
+
+        $client = $this->getMock('ZendRest\Client\RestClient');
+        $client->expects($this->once())
+             ->method($method)
+             ->will($this->returnValue($response));
+        return $client;
+    }
 }

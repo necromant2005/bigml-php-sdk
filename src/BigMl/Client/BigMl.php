@@ -4,6 +4,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use ZendRest\Client\RestClient;
 use Zend\Json\Json;
+use Zend\Http\Response;
 
 class BigMl
 {
@@ -62,32 +63,36 @@ class BigMl
 
     public function restGet($path, array $query = array())
     {
-        $path = '?username=' . $this->getOption('username') . ';api_key=' . $this->getOption('api_key');
-        $response = $this->getClient()->restGet($path, $query);
-        if (!$response->isOk()) {
-            throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response));
-        }
-        return Json::decode($response->getBody());
+        return $this->processResponse($this->getClient()->restGet($this->preparePath($path), $query));
     }
 
     public function restPost($path, array $query = null)
     {
-
+        return $this->processResponse($this->getClient()->restPost($this->preparePath($path), $query));
     }
 
     public function restPut($path, array $query = null)
     {
-
+        return $this->processResponse($this->getClient()->restPut($this->preparePath($path), $query));
     }
 
     public function restDelete($path)
     {
-        $client = $this->getClient();
-        return $client->restDelete();
+        return $this->processResponse($this->getClient()->restDelete($this->preparePath($path)));
     }
 
-    protected function prepareQuery()
+    protected function preparePath($path)
     {
+        return $path . '?' 
+            . self::FIELD_USERNAME . '=' . $this->getOption(self::FIELD_USERNAME) . ';' 
+            . self::FIELD_API_KEY . '=' . $this->getOption(self::FIELD_API_KEY);
+    }
 
+    protected function processResponse(Response $response)
+    {
+        if (!$response->isOk()) {
+            throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response));
+        }
+        return Json::decode($response->getBody(), Json::TYPE_ARRAY);
     }
 }

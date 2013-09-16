@@ -27,4 +27,9 @@ abstract class AbstractResource
     {
         return $this->resource;
     }
+
+    abstract public function create($data);
+    abstract public function retrieve($id);
+    abstract public function update($id, $data);
+    abstract public function delete($id);
 }

@@ -15,7 +15,7 @@ abstract class AbstractResource
     const CODE_FAULTY     = -1;  // Faulty  The task has failed. We either could not process the task as you requested it or there is an internal issue.
     const CODE_UNKNOWN    = -2;  // Unknown The task has reached a state that we cannot verify at this time. This a status you should never see unless BigML.io has suffered a major outage.
     const CODE_RUNNABLE   = -3;  // Runnable    The task has reached a faulty state because of a network or computer error, or because a dependent resource was not ready yet. If you repeat the request it might work this time.
-    const CODE_INTERNAL   = PHP_INT_MAX;  // Internal error non well formated response
+    const CODE_INTERNAL   = -9999;  // Internal error non well formated response
 
     protected $client = null;
 

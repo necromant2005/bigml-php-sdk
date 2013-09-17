@@ -37,8 +37,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $this->assertInstanceof('ZendRest\Client\RestClient', $client->getClient());
-        $this->assertEquals('https://bigml.io/dev/andromeda/', $client->getClient()->getUri()->toString());
+        $this->assertInstanceof('Zend\Http\Client', $client->getClient());
     }
 
     public function testConstructSetClient()
@@ -47,7 +46,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $mock = $this->getMock('ZendRest\Client\RestClient');
+        $mock = $this->getMock('Zend\Http\Client');
         $client->setClient($mock);
         $this->assertEquals($mock, $client->getClient());
     }
@@ -85,7 +84,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $client->setClient($this->getClientMock('restGet'));
+        $client->setClient($this->getClientMock());
         $this->assertEquals(array('status' => 'ok'), $client->restGet('source'));
     }
 
@@ -95,7 +94,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $client->setClient($this->getClientMock('restPut'));
+        $client->setClient($this->getClientMock());
         $this->assertEquals(array('status' => 'ok'), $client->restPut('source'));
     }
 
@@ -105,7 +104,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $client->setClient($this->getClientMock('restPost'));
+        $client->setClient($this->getClientMock());
         $this->assertEquals(array('status' => 'ok'), $client->restPost('source'));
     }
 
@@ -115,11 +114,11 @@ class BigMlTest extends PHPUnit_Framework_TestCase
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730'
         ));
-        $client->setClient($this->getClientMock('restDelete'));
+        $client->setClient($this->getClientMock());
         $this->assertEquals(array('status' => 'ok'), $client->restDelete('source'));
     }
 
-    public function testPreparePath()
+    public function testPrepareUri()
     {
         $client = new BigMl(array(
             'username' => 'alfred',
@@ -127,11 +126,11 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         ));
 
         $method = new ReflectionMethod(
-          get_class($client), 'preparePath'
+          get_class($client), 'prepareUri'
         );
         $method->setAccessible(TRUE);
         $this->assertEquals(
-            'abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'abc')
+            'https://bigml.io/dev/andromeda/abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'abc')
         );
     }
 
@@ -177,7 +176,33 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         $method->invoke($client, $response);
     }
 
-    private function getClientMock($method)
+    /**
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Unauthorized use
+     * @expectedExceptionCode -1100
+     */
+    public function testProcessResponseErrorParseJson()
+    {
+        $response = $this->getMock('Zend\Http\Response');
+        $response->expects($this->once())
+             ->method('getBody')
+             ->will($this->returnValue('{"code": 401, "status": {"code": -1100, "message": "Unauthorized use"}}'));
+        $response->expects($this->once())
+             ->method('isOk')
+             ->will($this->returnValue(false));
+
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $method = new ReflectionMethod(
+          get_class($client), 'processResponse'
+        );
+        $method->setAccessible(TRUE);
+        $method->invoke($client, $response);
+    }
+
+    private function getClientMock()
     {
         $response = $this->getMock('Zend\Http\Response');
         $response->expects($this->once())
@@ -187,9 +212,9 @@ class BigMlTest extends PHPUnit_Framework_TestCase
              ->method('isOk')
              ->will($this->returnValue(true));
 
-        $client = $this->getMock('ZendRest\Client\RestClient');
+        $client = $this->getMock('Zend\Http\Client');
         $client->expects($this->once())
-             ->method($method)
+             ->method('send')
              ->will($this->returnValue($response));
         return $client;
     }

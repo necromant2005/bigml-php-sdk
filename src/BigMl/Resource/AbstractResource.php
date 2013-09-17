@@ -19,7 +19,7 @@ abstract class AbstractResource
 
     protected $client = null;
 
-    protected $resource = 'source';
+    protected $resource = '';
 
     public function __construct(Client $client)
     {

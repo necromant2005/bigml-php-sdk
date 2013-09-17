@@ -92,3 +92,26 @@ $source = BigMl::factory('source', array( ... ));
 $source->create(array('remote' => 's3://bigml-public/csv/iris.csv'));
 ```
 
+Get info about source
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->retrieve('source/4f510d2003ce895676000069');
+```
+
+Get info with waiting til the process is finished and checking status every 10 seconds
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->wait('source/4f510d2003ce895676000069', 10);
+```
+
+Remove sorce
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->delete('source/4f510d2003ce895676000069');
+```

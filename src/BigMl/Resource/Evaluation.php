@@ -1,10 +1,10 @@
 <?php
 namespace BigMl\Resource;
 
-class Source extends AbstractResource
+class Prediction extends AbstractResource
 {
-    protected $resource = 'source';
-    
+    protected $resource = 'evaluation';
+
     public function create($data)
     {
         return $this->getClient()->restPost($this->getResource(), $data);

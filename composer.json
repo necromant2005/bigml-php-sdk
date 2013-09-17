@@ -3,6 +3,7 @@
     "type": "library",
     "description": "BigML php SDK",
     "keywords": ["bigml", "sdk"],
+    "license": "MIT",
     "homepage": "https://github.com/necromant2005/tt.git",
     "authors": [
         {

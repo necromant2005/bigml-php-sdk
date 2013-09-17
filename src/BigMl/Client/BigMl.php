@@ -120,7 +120,7 @@ class BigMl
 
     protected function processResponse(Response $response)
     {
-        if (!$response->isOk()) {
+        if (!$response->isSuccess()) {
             try {
                 $data = Json::decode($response->getBody(), Json::TYPE_ARRAY);
                 if (is_array($data) && array_key_exists('status', $data) && is_array($data['status'])

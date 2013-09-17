@@ -141,7 +141,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
              ->method('getBody')
              ->will($this->returnValue(json_encode(array('abc' => 123))));
         $response->expects($this->once())
-             ->method('isOk')
+             ->method('isSuccess')
              ->will($this->returnValue(true));
 
         $client = new BigMl(array(
@@ -162,7 +162,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
     {
         $response = $this->getMock('Zend\Http\Response');
         $response->expects($this->once())
-             ->method('isOk')
+             ->method('isSuccess')
              ->will($this->returnValue(false));
 
         $client = new BigMl(array(
@@ -188,7 +188,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
              ->method('getBody')
              ->will($this->returnValue('{"code": 401, "status": {"code": -1100, "message": "Unauthorized use"}}'));
         $response->expects($this->once())
-             ->method('isOk')
+             ->method('isSuccess')
              ->will($this->returnValue(false));
 
         $client = new BigMl(array(
@@ -209,7 +209,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
              ->method('getBody')
              ->will($this->returnValue(json_encode(array('status' => 'ok'))));
         $response->expects($this->once())
-             ->method('isOk')
+             ->method('isSuccess')
              ->will($this->returnValue(true));
 
         $client = $this->getMock('Zend\Http\Client');

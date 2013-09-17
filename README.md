@@ -115,3 +115,16 @@ use BigMl\Client\BigMl;
 $source = BigMl::factory('source', array( ... ));
 $source->delete('source/4f510d2003ce895676000069');
 ```
+
+#### Usage Basic
+
+Creating resource through factory
+```php
+use BigMl\Client\BigMl;
+
+BigMl::factory('source', array( ... )); // source
+BigMl::factory('dataset', array( ... )); // dataset
+BigMl::factory('model', array( ... )); // model
+BigMl::factory('prediction', array( ... )); // prediction
+BigMl::factory('evaluation', array( ... )); // evaluation
+```

@@ -50,7 +50,7 @@ abstract class AbstractResource
                 && array_key_exists('message', $response['status'])) {
                 $code = $response['status']['code'];
             } else {
-                $code = self::CODE_INTERNAL;                
+                $code = self::CODE_INTERNAL;
             }
             if ($code < 0) {
                 throw new RuntimeException('Error while waiting resource: ' . $id, $code, new RuntimeException(Json::encode($response)));
@@ -58,7 +58,7 @@ abstract class AbstractResource
             if ($code != self::CODE_FINISHED) {
                 sleep($tick);
             }
-        } while ($code == self::CODE_FINISHED);
+        } while ($code != self::CODE_FINISHED);
         return $response;
     }
 

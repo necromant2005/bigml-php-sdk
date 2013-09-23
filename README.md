@@ -38,7 +38,7 @@ $ php composer.phar update
 
 #### Usage
 
-Creating source resource in dev mode with API version "andromeda" with provided tokens
+Creating source resource with API version "andromeda"
 ```php
 use BigMl\Client\BigMl;
 
@@ -48,27 +48,29 @@ $source = BigMl::factory('source', array(
 ));
 ```
 
-Creating source resource in production mode
+Creating source resource in develoment mode with specific api version
 ```php
 use BigMl\Client\BigMl;
 
 $source = BigMl::factory('source', array(
     'username' => 'alfred',
     'api_key'  => '79138a622755a2383660347f895444b1eb927730',
-    'mode' => null,
-));
-```
-
-Creating source resource in production mode with API version "andromeda"
-```php
-use BigMl\Client\BigMl;
-
-$source = BigMl::factory('source', array(
-    'username' => 'alfred',
-    'api_key'  => '79138a622755a2383660347f895444b1eb927730',
-    'mode' => null,
+    'access_point' => 'https://bigml.io/dev/',
     'version' => 'andromeda',
 ));
+```
+
+#### Usage Basic
+
+Creating resource through factory
+```php
+use BigMl\Client\BigMl;
+
+BigMl::factory('source', array( ... )); // source
+BigMl::factory('dataset', array( ... )); // dataset
+BigMl::factory('model', array( ... )); // model
+BigMl::factory('prediction', array( ... )); // prediction
+BigMl::factory('evaluation', array( ... )); // evaluation
 ```
 
 #### Usage Source
@@ -114,17 +116,4 @@ use BigMl\Client\BigMl;
 
 $source = BigMl::factory('source', array( ... ));
 $source->delete('source/4f510d2003ce895676000069');
-```
-
-#### Usage Basic
-
-Creating resource through factory
-```php
-use BigMl\Client\BigMl;
-
-BigMl::factory('source', array( ... )); // source
-BigMl::factory('dataset', array( ... )); // dataset
-BigMl::factory('model', array( ... )); // model
-BigMl::factory('prediction', array( ... )); // prediction
-BigMl::factory('evaluation', array( ... )); // evaluation
 ```

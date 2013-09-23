@@ -9,18 +9,17 @@ use Zend\Json\Exception\RuntimeException as JsonRuntimeException;
 
 class BigMl
 {
-    const ACCESS_POINT = 'https://bigml.io/';
-
+    const FIELD_ACCESS_POINT = 'access_point';
     const FIELD_USERNAME = 'username';
     const FIELD_API_KEY  = 'api_key';
     const FIELD_VERSION  = 'version';
-    const FIELD_MODE     = 'mode';
 
     protected $client = null;
 
     protected $options = array(
+        // 'https://bigml.io/' for production and 'https://bigml.io/dev/' for development
+        self::FIELD_ACCESS_POINT  => 'https://bigml.io/',
         self::FIELD_VERSION => 'andromeda',
-        self::FIELD_MODE    => 'dev',
     );
 
     public function __construct(array $options)
@@ -108,10 +107,7 @@ class BigMl
 
     protected function prepareUri($path)
     {
-        $uri = self::ACCESS_POINT;
-        if ($this->getOption(self::FIELD_MODE)) {
-            $uri .= $this->getOption(self::FIELD_MODE) . '/';
-        }
+        $uri  = $this->getOption(self::FIELD_ACCESS_POINT);
         $uri .= $this->getOption(self::FIELD_VERSION) . '/';
         return $uri . $path . '?' 
             . self::FIELD_USERNAME . '=' . $this->getOption(self::FIELD_USERNAME) . ';' 

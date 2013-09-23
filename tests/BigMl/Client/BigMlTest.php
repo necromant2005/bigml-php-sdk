@@ -8,15 +8,15 @@ class BigMlTest extends PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $client = new BigMl(array(
+            'access_point' => 'https://bigml.io/dev/',
             'username' => 'alfred',
             'api_key' => '79138a622755a2383660347f895444b1eb927730',
             'version' => 'andromeda',
-            'mode' => 'dev',
         ));
         $this->assertEquals('alfred', $client->getOption('username'));
         $this->assertEquals('79138a622755a2383660347f895444b1eb927730', $client->getOption('api_key'));
         $this->assertEquals('andromeda', $client->getOption('version'));
-        $this->assertEquals('dev', $client->getOption('mode'));
+        $this->assertEquals('https://bigml.io/dev/', $client->getOption('access_point'));
     }
 
     public function testConstructDefault()
@@ -28,7 +28,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('alfred', $client->getOption('username'));
         $this->assertEquals('79138a622755a2383660347f895444b1eb927730', $client->getOption('api_key'));
         $this->assertEquals('andromeda', $client->getOption('version'));
-        $this->assertEquals('dev', $client->getOption('mode'));
+        $this->assertEquals('https://bigml.io/', $client->getOption('access_point'));
     }
 
     public function testConstructGetClient()
@@ -130,7 +130,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         );
         $method->setAccessible(TRUE);
         $this->assertEquals(
-            'https://bigml.io/dev/andromeda/abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'abc')
+            'https://bigml.io/andromeda/abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'abc')
         );
     }
 

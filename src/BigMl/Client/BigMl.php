@@ -126,8 +126,14 @@ class BigMl
                 }
             } catch (JsonRuntimeException $e) {}
             throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
+        } 
+        $data = Json::decode($response->getBody(), Json::TYPE_ARRAY); 
+        if (is_array($data) && array_key_exists('status', $data) && is_array($data['status'])
+            && array_key_exists('code', $data['status']) 
+            && array_key_exists('message', $data['status']) && $data['status']['code'] < 0) {
+            throw new RuntimeException($data['status']['message'], $data['status']['code'], new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
         }
-        return Json::decode($response->getBody(), Json::TYPE_ARRAY);
+        return $data;
     }
 
     public static function factory($name, $options)

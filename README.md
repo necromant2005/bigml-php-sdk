@@ -26,7 +26,7 @@ Installation
 
 ```json
 "require": {
-    "necromant2005/bigml-php-sdk": "dev-master",
+    "necromant2005/bigml-php-sdk": "1.*",
 }
 ```
 
@@ -108,6 +108,16 @@ use BigMl\Client\BigMl;
 
 $source = BigMl::factory('source', array( ... ));
 $source->wait('source/4f510d2003ce895676000069', 10);
+```
+
+Find source with name 'iris'
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->retrieve('source', array(
+    'name' => 'iris'
+));
 ```
 
 Remove sorce

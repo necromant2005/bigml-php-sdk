@@ -63,7 +63,7 @@ abstract class AbstractResource
     }
 
     abstract public function create($data);
-    abstract public function retrieve($id);
+    abstract public function retrieve($id, array $data = array());
     abstract public function update($id, $data);
     abstract public function delete($id);
 }

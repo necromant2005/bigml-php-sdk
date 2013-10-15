@@ -10,9 +10,9 @@ class Prediction extends AbstractResource
         return $this->getClient()->restPost($this->getResource(), $data);
     }
 
-    public function retrieve($id)
+    public function retrieve($id, array $data = array())
     {
-        return $this->getClient()->restGet($id);
+        return $this->getClient()->restGet($id, $data);
     }
 
     public function update($id, $data)

@@ -17,7 +17,7 @@ class Dataset extends AbstractResource
 
     public function update($id, $data)
     {
-        return $this->getClient()->restPost($id, $data);
+        return $this->getClient()->restPut($id, $data);
     }
 
     public function delete($id)

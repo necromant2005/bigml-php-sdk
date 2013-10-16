@@ -120,6 +120,16 @@ $source->retrieve('source', array(
 ));
 ```
 
+Rename source
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array( ... ));
+$source->update('source/4f510d2003ce895676000069', array(
+    'name' => 'iris-new'
+));
+```
+
 Remove sorce
 ```php
 use BigMl\Client\BigMl;

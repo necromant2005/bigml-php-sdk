@@ -60,6 +60,19 @@ $source = BigMl::factory('source', array(
 ));
 ```
 
+Using custom prediction Access Point for dedidated BigML AWS prediction instance
+```php
+use BigMl\Client\BigMl;
+
+$source = BigMl::factory('source', array(
+    'username' => 'alfred',
+    'api_key'  => '79138a622755a2383660347f895444b1eb927730',
+    'access_point' => 'https://bigml.io/dev/',
+    'access_point_prediction' => 'https://prediction.dev.bigml.io/',
+    'version' => 'andromeda',
+));
+```
+
 #### Usage Basic
 
 Creating resource through factory
@@ -136,4 +149,20 @@ use BigMl\Client\BigMl;
 
 $source = BigMl::factory('source', array( ... ));
 $source->delete('source/4f510d2003ce895676000069');
+```
+
+#### Usage Prediction
+Make prediction
+```php
+use BigMl\Client\BigMl;
+
+$service = BigMl::factory('prediction', array( ... ));
+$service->create(array(
+    'model' => 'model/57510d2003ce895676000069',
+    'input_data' => array(
+        '000000' => 'value1',
+        '000001' => 'valu2',
+    ),
+    'name' => 'my-prediction',
+));
 ```

@@ -10,9 +10,13 @@ use Zend\Json\Exception\RuntimeException as JsonRuntimeException;
 class BigMl
 {
     const FIELD_ACCESS_POINT = 'access_point';
+    const FIELD_ACCESS_POINT_PREDICTION = 'access_point_prediction';
     const FIELD_USERNAME = 'username';
     const FIELD_API_KEY  = 'api_key';
     const FIELD_VERSION  = 'version';
+
+    // resource identificator
+    const RESOURCE_PREDICTION = 'prediction';
 
     protected $client = null;
 
@@ -108,6 +112,11 @@ class BigMl
     protected function prepareUri($path)
     {
         $uri  = $this->getOption(self::FIELD_ACCESS_POINT);
+
+        list($resource) = explode('/', $path);
+        if ($resource == self::RESOURCE_PREDICTION && $this->getOption(self::FIELD_ACCESS_POINT_PREDICTION)) {
+            $uri  = $this->getOption(self::FIELD_ACCESS_POINT_PREDICTION);
+        }
         $uri .= $this->getOption(self::FIELD_VERSION) . '/';
         return $uri . $path . '?' 
             . self::FIELD_USERNAME . '=' . $this->getOption(self::FIELD_USERNAME) . ';' 

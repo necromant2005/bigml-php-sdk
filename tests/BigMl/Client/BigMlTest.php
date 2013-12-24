@@ -134,6 +134,39 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function testPrepareUriForPredictionDefault()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730'
+        ));
+
+        $method = new ReflectionMethod(
+          get_class($client), 'prepareUri'
+        );
+        $method->setAccessible(TRUE);
+        $this->assertEquals(
+            'https://bigml.io/andromeda/prediction?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'prediction')
+        );
+    }
+
+    public function testPrepareUriForPredictionCustom()
+    {
+        $client = new BigMl(array(
+            'username' => 'alfred',
+            'api_key' => '79138a622755a2383660347f895444b1eb927730',
+            'access_point_prediction' => 'https://prediction.bigml.io/',
+        ));
+
+        $method = new ReflectionMethod(
+          get_class($client), 'prepareUri'
+        );
+        $method->setAccessible(TRUE);
+        $this->assertEquals(
+            'https://prediction.bigml.io/andromeda/prediction/abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'prediction/abc')
+        );
+    }    
+
     public function testProcessResponse()
     {
         $response = $this->getMock('Zend\Http\Response');

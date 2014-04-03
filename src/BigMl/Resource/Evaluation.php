@@ -1,7 +1,7 @@
 <?php
 namespace BigMl\Resource;
 
-class Prediction extends AbstractResource
+class Evaluation extends AbstractResource
 {
     protected $resource = 'evaluation';
 

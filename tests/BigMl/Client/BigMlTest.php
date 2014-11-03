@@ -165,7 +165,7 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(
             'https://prediction.bigml.io/andromeda/prediction/abc?username=alfred;api_key=79138a622755a2383660347f895444b1eb927730', $method->invoke($client, 'prediction/abc')
         );
-    }    
+    }
 
     public function testProcessResponse()
     {
@@ -209,20 +209,15 @@ class BigMlTest extends PHPUnit_Framework_TestCase
         $method->invoke($client, $response);
     }
 
-    /**
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Unauthorized use
-     * @expectedExceptionCode -1100
-     */
-    public function testProcessResponseErrorParseJson()
+    public function testProcessResponseErrorParseJsonTooBig()
     {
         $response = $this->getMock('Zend\Http\Response');
         $response->expects($this->once())
              ->method('getBody')
-             ->will($this->returnValue('{"code": 401, "status": {"code": -1100, "message": "Unauthorized use"}}'));
+             ->will($this->returnValue(file_get_contents(__DIR__ . '/_files/out.json')));
         $response->expects($this->once())
              ->method('isSuccess')
-             ->will($this->returnValue(false));
+             ->will($this->returnValue(true));
 
         $client = new BigMl(array(
             'username' => 'alfred',
@@ -232,7 +227,22 @@ class BigMlTest extends PHPUnit_Framework_TestCase
           get_class($client), 'processResponse'
         );
         $method->setAccessible(TRUE);
-        $method->invoke($client, $response);
+        try {
+            $method->invoke($client, $response);
+        } catch (\Exception $e) {
+            echo $e . PHP_EOL;
+        }
+    }
+
+    public function testFactory()
+    {
+        $source = BigMl::factory('source', array(
+            'username' => 'alfred',
+            'api_key'  => '79138a622755a2383660347f895444b1eb927730'
+        ));
+        $this->assertInstanceof('BigMl\Resource\AbstractResource', $source);
+        $this->assertInstanceof('BigMl\Resource\Source', $source);
+        $this->assertInstanceof('BigMl\Client\BigMl', $source->getClient());
     }
 
     private function getClientMock()
@@ -253,14 +263,4 @@ class BigMlTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function testFactory()
-    {
-        $source = BigMl::factory('source', array(
-            'username' => 'alfred',
-            'api_key'  => '79138a622755a2383660347f895444b1eb927730'            
-        ));
-        $this->assertInstanceof('BigMl\Resource\AbstractResource', $source);
-        $this->assertInstanceof('BigMl\Resource\Source', $source);
-        $this->assertInstanceof('BigMl\Client\BigMl', $source->getClient());
-    }
 }

@@ -3,12 +3,16 @@ namespace BigMl\Client;
 use InvalidArgumentException;
 use RuntimeException;
 use Zend\Http\Client as HttpClient;
-use Zend\Json\Json;
 use Zend\Http\Response;
-use Zend\Json\Exception\RuntimeException as JsonRuntimeException;
 
 class BigMl
 {
+    /**
+     * @const json decode type = array
+     */
+    const JSON_DECODE_TYPE_ARRAY = true;
+    const JSON_DECODE_DEPTH = 1024;
+
     const FIELD_ACCESS_POINT = 'access_point';
     const FIELD_ACCESS_POINT_PREDICTION = 'access_point_prediction';
     const FIELD_USERNAME = 'username';
@@ -81,7 +85,7 @@ class BigMl
         $client->setUri($this->prepareUri($path));
         $client->setEncType('application/json');
         $client->setMethod('POST');
-        $client->setRawBody(Json::encode($query));
+        $client->setRawBody(json_encode($query));
         $response = $client->send();
         return $this->processResponse($response);
     }
@@ -93,7 +97,7 @@ class BigMl
         $client->setUri($this->prepareUri($path));
         $client->setEncType('application/json');
         $client->setMethod('PUT');
-        $client->setRawBody(Json::encode($query));
+        $client->setRawBody(json_encode($query));
         $response = $client->send();
         return $this->processResponse($response);
     }
@@ -118,27 +122,25 @@ class BigMl
             $uri  = $this->getOption(self::FIELD_ACCESS_POINT_PREDICTION);
         }
         $uri .= $this->getOption(self::FIELD_VERSION) . '/';
-        return $uri . $path . '?' 
-            . self::FIELD_USERNAME . '=' . $this->getOption(self::FIELD_USERNAME) . ';' 
+        return $uri . $path . '?'
+            . self::FIELD_USERNAME . '=' . $this->getOption(self::FIELD_USERNAME) . ';'
             . self::FIELD_API_KEY . '=' . $this->getOption(self::FIELD_API_KEY);
     }
 
     protected function processResponse(Response $response)
     {
         if (!$response->isSuccess()) {
-            try {
-                $data = Json::decode($response->getBody(), Json::TYPE_ARRAY);
-                if (is_array($data) && array_key_exists('status', $data) && is_array($data['status'])
-                    && array_key_exists('code', $data['status']) 
-                    && array_key_exists('message', $data['status'])) {
-                    throw new RuntimeException($data['status']['message'], $data['status']['code'], new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
-                }
-            } catch (JsonRuntimeException $e) {}
+            $data = json_decode($response->getBody(), self::JSON_DECODE_TYPE_ARRAY, self::JSON_DECODE_DEPTH);
+            if (is_array($data) && array_key_exists('status', $data) && is_array($data['status'])
+                && array_key_exists('code', $data['status'])
+                && array_key_exists('message', $data['status'])) {
+                throw new RuntimeException($data['status']['message'], $data['status']['code'], new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
+            }
             throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
-        } 
-        $data = Json::decode($response->getBody(), Json::TYPE_ARRAY); 
+        }
+        $data = json_decode($response->getBody(), self::JSON_DECODE_TYPE_ARRAY, self::JSON_DECODE_DEPTH);
         if (is_array($data) && array_key_exists('status', $data) && is_array($data['status'])
-            && array_key_exists('code', $data['status']) 
+            && array_key_exists('code', $data['status'])
             && array_key_exists('message', $data['status']) && $data['status']['code'] < 0) {
             throw new RuntimeException($data['status']['message'], $data['status']['code'], new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
         }

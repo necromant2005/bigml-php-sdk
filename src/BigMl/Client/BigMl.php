@@ -11,7 +11,7 @@ class BigMl
      * @const json decode type = array
      */
     const JSON_DECODE_TYPE_ARRAY = true;
-    const JSON_DECODE_DEPTH = 1024;
+    const JSON_DECODE_DEPTH = 8192;
 
     const FIELD_ACCESS_POINT = 'access_point';
     const FIELD_ACCESS_POINT_PREDICTION = 'access_point_prediction';
@@ -139,6 +139,9 @@ class BigMl
             throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
         }
         $data = json_decode($response->getBody(), self::JSON_DECODE_TYPE_ARRAY, self::JSON_DECODE_DEPTH);
+        if (!is_array($data)) {
+            throw new RuntimeException($response->getReasonPhrase(), $response->getStatusCode(), new RuntimeException($response, -1, new RuntimeException( $this->getClient()->getLastRawRequest() )));
+        }
         if (is_array($data) && array_key_exists('status', $data) && is_array($data['status'])
             && array_key_exists('code', $data['status'])
             && array_key_exists('message', $data['status']) && $data['status']['code'] < 0) {

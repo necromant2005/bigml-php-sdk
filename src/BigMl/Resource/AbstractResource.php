@@ -44,7 +44,7 @@ abstract class AbstractResource
     public function wait($id, $tick = 5)
     {
         do {
-            $response = $this->retrieve($id);
+            $response = $this->retrieve($id, array('full' => false));
             if (is_array($response) && array_key_exists('status', $response) && is_array($response['status'])
                 && array_key_exists('code', $response['status'])
                 && array_key_exists('message', $response['status'])) {
